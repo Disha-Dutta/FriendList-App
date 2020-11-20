@@ -1,0 +1,76 @@
+.app {
+  background: #1072d6;
+  padding: 30px;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.todo-list {
+  background: #e8e8e8;
+  border-radius: 4px;
+  padding: 10px;
+  width: 50%;
+  height: 60%;
+}
+
+.todo {
+  background: #fff;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
+  padding: 8px 20px;
+  font-size: 16px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+input {
+  margin-bottom: 10px;
+  width: 50%;
+  height: 32px;
+  font-size: 16px;
+  border: none;
+  padding: 4px 8px;
+}
+
+button {
+  height: 30px;
+  width: 80px;
+  font-size: 16px;
+  margin: 8px;
+}
+
+.form {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form input {
+  width: 80%;
+}
+
+.form button {
+  width: 80px;
+  font-size: 20px;
+  margin: 8px;
+  padding: 4px;
+  background: #4256f5;
+  border: none;
+  border-radius: 2px;
+  color: white;
+  font-weight: bold;
+}
+
+#page-numbers {
+  list-style: none;
+  display: flex;
+  padding: 12px;
+}
+
+#page-numbers li {
+  margin-right: 16px;
+  cursor: pointer;
+}
