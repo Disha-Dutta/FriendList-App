@@ -1,125 +1,96 @@
 import React, { useState } from "react";
 import "./App.css";
-
-function Todo({ todo, index, completeTodo, removeTodo }) {
-  return (
-    <div className="todo">
-      {todo.text}
-
-      <div>
-        {todo.isCompleted ? (
-          <button
-            style={{ backgroundColor: "yellow" }}
-            onClick={() => completeTodo(index)}
-          >
-            ★
-          </button>
-        ) : (
-          <button onClick={() => completeTodo(index)}>☆</button>
-        )}
-        <button onClick={() => removeTodo(index)}>x</button>
-      </div>
-    </div>
-  );
-}
-
-function TodoForm({ addTodo, searchTodo }) {
-  const [value, setValue] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!value) return;
-    addTodo(value);
-    setValue("");
-  };
-
-  return (
-    <div className="form">
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          className="input"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Enter to do item"
-        />
-      </form>
-      {/* <button onClick={(e) => searchTodo(e)}>Search</button> */}
-    </div>
-  );
-}
+import { FriendList, FriendForm } from "./friends";
 
 function App() {
-  const [todos, setTodos] = useState([
+  const [friends, setFriends] = useState([
     {
+      id: 1,
       text: "Rajinder",
       isCompleted: false,
     },
     {
+      id: 2,
       text: "Priya Dutta",
       isCompleted: false,
     },
     {
+      id: 3,
       text: "Ruhani",
+      isCompleted: false,
+    },
+    {
+      id: 4,
+      text: "Subhadeep",
+      isCompleted: false,
+    },
+    {
+      id: 5,
+      text: "Subha",
       isCompleted: false,
     },
   ]);
   const [value, setValue] = useState("");
-  const [filter, setFilter] = useState(todos);
+  const [filter, setFilter] = useState(friends);
   const [currentPage, setCurrentPage] = useState(1);
   const [todosPerPage, setTodosPerPage] = useState(4);
 
-  const search = (e) => {
-    if (value) {
-      let filterData = todos.filter((item) => {
-        const lc = item.text.toLowerCase();
-        const filter = value.toLowerCase();
+  const search = (clear = null) => {
+    if (value && !clear) {
+      let filterData = friends.filter((item) => {
+        const textlc = item.text.toLowerCase();
+        const valuelc = value.toLowerCase();
 
-        return lc.includes(filter);
+        return textlc.includes(valuelc);
       });
       setFilter(filterData);
-      // setTodos(filterData);
     } else {
-      setFilter(todos);
-      // setTodos(todos);
+      setFilter(friends);
     }
   };
 
-  const addTodo = (text) => {
-    const newTodos = [...todos, { text, isCompleted: false }];
-    setTodos(newTodos);
-    setFilter(newTodos);
+  const addFriend = (text) => {
+    const newFriendList = [
+      ...friends,
+      { id: friends.length + 1, text, isCompleted: false },
+    ];
+    setFriends(newFriendList);
+    setFilter(newFriendList);
   };
 
-  const completeTodo = (index) => {
-    // let newTodos = [...todos];
-    const newTodos = [...filter];
-    var todo = newTodos[index];
-    todo.isCompleted = !todo.isCompleted;
-    newTodos.splice(index, 1);
-    todo.isCompleted ? newTodos.unshift(todo) : newTodos.push(todo);
-    // setTodos(newTodos);
-    setFilter(newTodos);
+  const addToFav = (id) => {
+    const newFriendList = [...filter];
+    var friendIndex = newFriendList.findIndex((e) => e.id === id);
+    var friend = newFriendList[friendIndex];
+    friend.isCompleted = !friend.isCompleted;
+    newFriendList.splice(friendIndex, 1);
+    friend.isCompleted
+      ? newFriendList.unshift(friend)
+      : newFriendList.push(friend);
+    setFilter(newFriendList);
   };
 
-  const removeTodo = (index) => {
-    // const newTodos = [...todos];
-    const newTodos = [...filter];
-    newTodos.splice(index, 1);
-    setTodos(newTodos);
-    setFilter(newTodos);
+  const removeFriend = (id) => {
+    var confirmed = window.confirm(
+      "are you sure you want to delete this friend from the list?"
+    );
+    if (confirmed) {
+      const newFriendList = [...filter];
+      var friendIndex = newFriendList.findIndex((e) => e.id === id);
+      newFriendList.splice(friendIndex, 1);
+      setFriends(newFriendList);
+      setFilter(newFriendList);
+    } else {
+      return false;
+    }
   };
 
   const handlePagination = (event) => {
     setCurrentPage(Number(event.target.id));
   };
 
-  const indexOfLastTodo = currentPage * todosPerPage;
-  const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
-  console.log(indexOfLastTodo, indexOfFirstTodo);
-  // setTodos(todos.slice(indexOfFirstTodo, indexOfLastTodo));
-  // setFilter(filter.slice(indexOfFirstTodo, indexOfLastTodo));
-  console.log(filter.slice(indexOfFirstTodo, indexOfLastTodo));
+  const indexOfLastFriend = currentPage * todosPerPage;
+  const indexOfFirstFriend = indexOfLastFriend - todosPerPage;
 
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(filter.length / todosPerPage); i++) {
@@ -136,34 +107,31 @@ function App() {
 
   return (
     <div className="app">
-      <div className="todo-list">
-        <TodoForm todo={todos} addTodo={addTodo} />
+      <div className="friend-list">
+        <FriendForm friend={friends} addFriend={addFriend} />
         <input
           type="text"
           className="input"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => {
+            setValue(e.target.value);
+            if (e.target.value === "") search(true);
+          }}
           placeholder="Search"
         />
-        <button onClick={(e) => search(e)}>Search</button>
-        {filter.slice(indexOfFirstTodo, indexOfLastTodo).map((todo, index) => (
-          <Todo
-            key={index}
-            index={index}
-            todo={todo}
-            completeTodo={completeTodo}
-            removeTodo={removeTodo}
-          />
-        ))}
-        {/* {filter.map((todo, index) => (
-          <Todo
-            key={index}
-            index={index}
-            todo={todo}
-            completeTodo={completeTodo}
-            removeTodo={removeTodo}
-          />
-        ))} */}
+        <button onClick={() => search()}>Search</button>
+        {filter
+          .slice(indexOfFirstFriend, indexOfLastFriend)
+          .map((friend, index) => (
+            <FriendList
+              key={index}
+              index={index}
+              friend={friend}
+              addToFav={addToFav}
+              removeFriend={removeFriend}
+            />
+          ))}
+
         <ul id="page-numbers">{renderPageNumbers}</ul>
       </div>
     </div>
