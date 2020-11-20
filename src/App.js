@@ -108,7 +108,7 @@ function App() {
   return (
     <div className="app">
       <div className="friend-list">
-        <FriendForm friend={friends} addFriend={addFriend} />
+        <h3>Friends List</h3>
         <input
           type="text"
           className="input"
@@ -131,6 +131,9 @@ function App() {
               removeFriend={removeFriend}
             />
           ))}
+
+        <h4>Add New Friends</h4>
+        <FriendForm friend={friends} addFriend={addFriend} />
 
         <ul id="page-numbers">{renderPageNumbers}</ul>
       </div>

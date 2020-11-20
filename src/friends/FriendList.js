@@ -8,7 +8,7 @@ function FriendList({ friend, index, addToFav, removeFriend }) {
       <div>
         {friend.isCompleted ? (
           <button
-            style={{ backgroundColor: "yellow" }}
+            style={{ backgroundColor: "yellow", border: "none" }}
             onClick={() => addToFav(friend.id)}
           >
             ★
